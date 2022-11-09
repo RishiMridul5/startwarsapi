@@ -12,10 +12,13 @@
 }
 
 .error {
-    display: block;
-    outline: 2px solid rgba(255, 255, 255, 0.107);
-    outline-offset: 10px;
-    border: 2px solid #e80dbd;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.45rem;
+    border: 5px solid #e80dbd;
     max-width: max-content;
     background-color: #1c1919;
     font-weight: 100;
@@ -23,8 +26,36 @@
     font-size: 1.5rem;
     color: #e80dbcc7;
     margin: 0 auto;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    text-transform: uppercase;
+    transform: translate(-50%,-60%);
 }
-
+.error h1{
+    text-align: center;
+}
+.error p{
+    font-size: .9rem;
+    text-transform: lowercase;
+    margin-top: 100px;
+    color: rgba(255, 255, 255, 0.312);
+}
+.cancelRefetch{
+    border: 0;
+    border-radius: 0.35rem;
+    cursor: pointer;
+    background-color: #d6cad4;
+    color: #1c1919;
+    padding: 0.45rem 0.8rem;
+    margin-top: 40px;
+    font-weight: bold;
+    transition: all 0.25s ease-in;
+}
+.cancelRefetch:hover{
+    background-color: #e80dbd;
+    color: #fff;
+}
 .default {
     position: absolute;
     left: 0;

@@ -2,22 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import MovieItem from "./MovieItem";
 import "./Movies.css";
 const Movies = ({ param }) => {
+  const idref = useRef();
+
   const [movies, setMovies] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [err, setErr] = useState(false);
 
-  const resetApp = () => {
-    setMovies([]);
-    setisLoading(false);
-    setErr(false);
-  };
-
-  console.log("Movies component called");
-
   useEffect(() => {
-    let tID = 0;
     const baseURL = `https://swapi.dev/apis/`;
     const controller = new AbortController();
+
     async function fetchMovies(baseURL) {
       try {
         setisLoading(true);
@@ -32,25 +26,30 @@ const Movies = ({ param }) => {
       } catch (e) {
         setErr(true);
         setisLoading(false);
-
-        tID = setInterval(() => {
-          // if(!err) clearInterval(tID)
-          console.log(`re fetching...`);
-          fetchMovies(`${baseURL}${param}/`);
-        }, 5000);
       }
     }
+
     if (param !== "") fetchMovies(`${baseURL}${param}/`);
 
+    if (err) {
+      idref.current = setInterval(() => {
+        console.log("....trying again");
+        fetchMovies(`${baseURL}${param}/`);
+      }, 3000);
+    }
+
     return () => {
-      if (tID) clearInterval(tID);
+      // clearInterval(idref.current);
       controller.abort();
     };
   }, [param]);
 
+  useEffect(() => {
+    console.log(`err: ${err}👓`);
+  });
+
   return (
     <>
-      {err && <button onClick={resetApp}>Cancel re-fetching</button>}
       {!isLoading && movies.length > 0 && (
         <section className="movie-list-container">
           {movies.map((movie) => {
@@ -80,7 +79,22 @@ const Movies = ({ param }) => {
       )}
       {err && (
         <div className="error">
-          <p>Opps....Something went wrong....Retrying</p>
+          <h1>Something went wrong </h1>
+          {err && (
+            <button
+              className="cancelRefetch"
+              style={{ padding: "10px 20px" }}
+              onClick={() => {
+                console.log("clear btn clicked");
+                clearInterval(idref.current);
+                setErr(false)
+                setisLoading(false)
+              }}
+            >
+              Cancel re-fetching
+            </button>
+          )}
+          <p>Retrying....</p>
         </div>
       )}
     </>

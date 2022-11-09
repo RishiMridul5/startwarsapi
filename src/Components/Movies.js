@@ -2,46 +2,52 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import MovieItem from "./MovieItem";
 import "./Movies.css";
 const Movies = ({ url }) => {
-  const idref = useRef();
   const [movies, setMovies] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [err, setErr] = useState(false);
+  const [stopFetch, setstopFetch] = useState(false);
 
-  let timerID = null;
-  const controller = new AbortController();
-  const fetchMovies = useCallback(async () => {
-    try {
-      setisLoading(true);
-      const res = await fetch(url, { signal: controller.signal });
-      if (!res.ok || !navigator.onLine) {
-        throw new Error(`Error: Something wrong happened`);
-      } else {
-        const data = await res.json();
-        setisLoading(false);
-        setMovies(data.results);
+  const fetchMovies = useCallback(
+    async (timer = false, controller) => {
+      if (stopFetch) {
+        console.log(stopFetch);
+        controller.abort();
+        clearInterval(timer);
+        return;
       }
-    } catch (e) {
-      setErr(true);
-      setisLoading(false);
+      try {
+        setisLoading(true);
+        const res = await fetch(url, { signal: controller.signal });
 
-      const timer = setTimeout(() => {
-        fetchMovies(`${url}/`);
-      }, 1000);
-    }
-  }, [url]);
+        if (!res.ok || !navigator.onLine) {
+          throw new Error(`Error ${res.status}: Something wrong happened `);
+        } else {
+          const data = await res.json();
+          setisLoading(false);
+          setMovies(data.results);
+        }
+      } catch (e) {
+        setErr(true);
+        setisLoading(false);
+      }
+    },
+    [stopFetch, url]
+  );
 
   useEffect(() => {
-    fetchMovies(`${url}/`);
+    const controller = new AbortController();
+    fetchMovies(false, controller);
+    let timer = 0;
+    if (err) {
+      timer = setInterval(() => {
+        fetchMovies(timer, controller);
+      }, 1000);
+    }
     return () => {
+      clearInterval(timer);
       controller.abort();
     };
   }, [url, err]);
-
-  // for testing err
-  useEffect(() => {
-    console.log(`err: ${err}👓`);
-    console.log(`isLoading: ${isLoading}⛳`);
-  });
 
   return (
     <>
@@ -77,12 +83,10 @@ const Movies = ({ url }) => {
           <h1>Something went wrong </h1>
           {err && (
             <button
-              className="cancelRefetch"
+              className="cancelstopFetch"
               style={{ padding: "10px 20px" }}
               onClick={() => {
-                console.log("clear btn clicked");
-                console.log(idref.current);
-                clearInterval(idref.current);
+                setstopFetch(true);
                 setErr(false);
                 setisLoading(false);
               }}

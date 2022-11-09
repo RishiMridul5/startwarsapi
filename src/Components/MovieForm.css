@@ -1,0 +1,63 @@
+.form-container {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0px 2px 5px #fff;
+    padding: 2rem;
+    margin: 2rem auto;
+}
+
+.form-control {
+    margin-bottom: 1.5rem;
+}
+
+.form-control label {
+    color: #653774;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#title,
+#opening-text,
+#date {
+    outline: 0;
+    border: 1px solid #80808028;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+    height: 40px;
+    width: 100%;
+    padding: 0.5rem 0.25rem;
+    margin-top: 1.17rem;
+    border-radius: 0.25rem;
+}
+
+#opening-text {
+    padding: 1rem;
+    min-height: 400px;
+    border-radius: 0.5rem;
+    box-shadow: 0px 2px 15px #be90dd;
+}
+
+#date {
+    padding: 0.5rem 0.25rem;
+}
+
+.addMovieBtn {
+    font-size: 2rem;
+    cursor: pointer;
+    border: 0;
+    border-radius: 0.35rem;
+    font-weight: thin;
+    background-color: #58196a;
+    border-radius: 10rem;
+    color: #fff;
+    display: block;
+    padding: 0.45rem 2rem;
+    margin: 20px auto;
+    transition: all 0.25s ease-in-out;
+}
+
+.addMovieBtn:hover,
+.addMovieBtn:active,
+.addMovieBtn:focus {
+    background-color: rgb(20, 60, 220);
+}

@@ -88,3 +88,15 @@
     transform: skew(-10deg) translateY(-50%);
     z-index: -10;
 }
+.cancelstopFetch{
+    cursor: pointer;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 10rem;
+    padding: 0.25rem 2rem;
+}
+.cancelstopFetch:hover{
+    background-color: #1c1919;
+    color: #fff;
+    border: 0.15rem solid #fff
+}

@@ -1,21 +1,19 @@
 import React from "react";
 import "./Form.css";
-const Form = ({ setURLparam }) => {
-  const setParam = (value) => {
-    setURLparam(value.toLowerCase());
-  };
+const Form = ({ setReqUrl }) => {
+
   return (
     <form className="app-form">
       <button
         className="btn primary"
         onClick={(e) => {
           e.preventDefault();
-          setParam("Films");
+          setReqUrl(`https://swapi.dev/apis/films`);
         }}
       >
         Films
       </button>
-      <button
+      {/* <button
         className="btn primary"
         onClick={(e) => {
           e.preventDefault();
@@ -50,7 +48,7 @@ const Form = ({ setURLparam }) => {
         }}
       >
         Vehicles
-      </button>
+      </button> */}
     </form>
   );
 };

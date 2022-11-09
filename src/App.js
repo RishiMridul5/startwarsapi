@@ -2,15 +2,15 @@ import Movies from "./Components/Movies";
 import Form from "./Components/Form";
 import { useState } from "react";
 function App() {
-  const [param, setParam] = useState("");
+  const [url, setUrl] = useState(`https://swapi.dev/api/films`);
   return (
     <div className="app">
       <Form
-        setURLparam={(value) => {
-          setParam(value);
+        setReqUrl={(url) => {
+          setUrl(url);
         }}
       />
-      <Movies param={param} />
+      <Movies url={url} />
     </div>
   );
 }

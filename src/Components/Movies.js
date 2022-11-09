@@ -1,56 +1,51 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import MovieItem from "./MovieItem";
 import "./Movies.css";
-const Movies = ({ param }) => {
+const Movies = ({ url }) => {
   const idref = useRef();
-
   const [movies, setMovies] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [err, setErr] = useState(false);
 
-  useEffect(() => {
-    const baseURL = `https://swapi.dev/apis/`;
-    const controller = new AbortController();
-
-    async function fetchMovies(baseURL) {
-      try {
-        setisLoading(true);
-        const res = await fetch(baseURL, { signal: controller.signal });
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status} ${res.statusText}`);
-        } else {
-          const data = await res.json();
-          setisLoading(false);
-          setMovies(data.results);
-        }
-      } catch (e) {
-        setErr(true);
+  let timerID = null;
+  const controller = new AbortController();
+  const fetchMovies = useCallback(async () => {
+    try {
+      setisLoading(true);
+      const res = await fetch(url, { signal: controller.signal });
+      if (!res.ok || !navigator.onLine) {
+        throw new Error(`Error: Something wrong happened`);
+      } else {
+        const data = await res.json();
         setisLoading(false);
+        setMovies(data.results);
       }
+    } catch (e) {
+      setErr(true);
+      setisLoading(false);
+
+      const timer = setTimeout(() => {
+        fetchMovies(`${url}/`);
+      }, 1000);
     }
+  }, [url]);
 
-    if (param !== "") fetchMovies(`${baseURL}${param}/`);
-
-    if (err) {
-      idref.current = setInterval(() => {
-        console.log("....trying again");
-        fetchMovies(`${baseURL}${param}/`);
-      }, 3000);
-    }
-
+  useEffect(() => {
+    fetchMovies(`${url}/`);
     return () => {
-      // clearInterval(idref.current);
       controller.abort();
     };
-  }, [param]);
+  }, [url, err]);
 
+  // for testing err
   useEffect(() => {
     console.log(`err: ${err}👓`);
+    console.log(`isLoading: ${isLoading}⛳`);
   });
 
   return (
     <>
-      {!isLoading && movies.length > 0 && (
+      {!isLoading && movies.length > 0 && err === false && (
         <section className="movie-list-container">
           {movies.map((movie) => {
             const { title, opening_crawl, episode_id } = movie;
@@ -86,9 +81,10 @@ const Movies = ({ param }) => {
               style={{ padding: "10px 20px" }}
               onClick={() => {
                 console.log("clear btn clicked");
+                console.log(idref.current);
                 clearInterval(idref.current);
-                setErr(false)
-                setisLoading(false)
+                setErr(false);
+                setisLoading(false);
               }}
             >
               Cancel re-fetching

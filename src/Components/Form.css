@@ -1,4 +1,4 @@
-form{
+form {
     width: 400px;
     margin: 3rem auto;
     display: flex;
@@ -6,22 +6,25 @@ form{
     align-items: center;
     gap: 0.5rem
 }
-.btn{
+
+.btn {
+    font-size: 2rem;
     cursor: pointer;
-    font-size: 1.25rem;
-    padding: 0.25rem 0.5rem;
-    border:0;
+    padding: 0.45rem 1rem;
+    border: 0;
     border-radius: 0.35rem;
     transition: all 0.25s ease-in-out;
 }
-.btn.primary{
+
+.btn.primary {
     font-weight: thin;
     background-color: #3a1345;
     color: #fff;
 }
+
 .btn.primary:hover,
 .btn.primary:active,
-.btn.primary:focus{
+.btn.primary:focus {
     background-color: crimson;
 
 }
